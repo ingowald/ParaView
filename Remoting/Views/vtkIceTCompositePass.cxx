@@ -272,6 +272,16 @@ void vtkIceTCompositePass::SetupContext(const vtkRenderState* render_state)
   double allBounds[6];
   render_state->GetRenderer()->ComputeVisiblePropBounds(allBounds);
 
+#if 1
+  allBounds[0] = -VTK_FLOAT_MAX;
+  allBounds[1] = +VTK_FLOAT_MAX;
+  allBounds[2] = -VTK_FLOAT_MAX;
+  allBounds[3] = +VTK_FLOAT_MAX;
+  allBounds[4] = -VTK_FLOAT_MAX;
+  allBounds[5] = +VTK_FLOAT_MAX;
+    icetBoundingBoxd(
+      allBounds[0], allBounds[1], allBounds[2], allBounds[3], allBounds[4], allBounds[5]);
+#else
   // Try to detect when bounds are empty and try to let IceT know that
   // nothing is in bounds.
   if (allBounds[0] > allBounds[1])
@@ -293,7 +303,8 @@ void vtkIceTCompositePass::SetupContext(const vtkRenderState* render_state)
     icetBoundingBoxd(
       allBounds[0], allBounds[1], allBounds[2], allBounds[3], allBounds[4], allBounds[5]);
   }
-
+#endif
+  
   if (this->DataReplicatedOnAllProcesses)
   {
     icetDataReplicationGroupColor(1);
